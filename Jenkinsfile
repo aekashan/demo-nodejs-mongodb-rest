@@ -27,7 +27,11 @@ pipeline {
         //         sh 'ANSIBLE_ROLES_PATH="$PWD/ansible-script/roles" ansible-playbook -vvv ./ansible-script/playbook/web-server/web-server.yml -i ./ansible-script/host -u root -e "state=prepareation tagnumber=${BUILD_NUMBER}"'
         //     }
         // }
-        
+       stage('Example'){
+       	steps{
+		echo 'hello world'
+	}
+       }
         stage('Build docker image') {
             steps {
                 script {
