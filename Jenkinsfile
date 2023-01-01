@@ -32,17 +32,31 @@ pipeline {
 		echo 'hello world'
 	}
        }
-        stage('Build docker image') {
-            steps {
-                script {
-                    docker.withRegistry('', 'dockerhub') {
-                        def slackImage = docker.build("${env.image}:${BUILD_NUMBER}")
-                        slackImage.push()
-                        slackImage.push('latest')
-                    }
+       stage('Build') {
+            agent {
+                docker {
+                    image 'ekachansr/nodejs'
+                    // Run the container on the node specified at the
+                    // top-level of the Pipeline, in the same workspace,
+                    // rather than on a new node entirely:
+                    reuseNode true
                 }
             }
-        }
+            steps {
+                sh 'gradle --version'
+            }
+       }
+	//stage('Build docker image') {
+        //    steps {
+        //        script {
+        //            docker.withRegistry('', 'dockerhub') {
+        //                def slackImage = docker.build("${env.image}:${BUILD_NUMBER}")
+        //                slackImage.push()
+        //                slackImage.push('latest')
+        //            }
+        //        }
+        //    }
+        //}
 
         stage('Deployment'){
             steps {
