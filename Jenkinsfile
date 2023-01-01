@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        image = "atisak/demo-nodejs"
+        image = "ekachansr/demo-nodejs"
         registry = "docker.io"
     }
 
