@@ -27,14 +27,14 @@ pipeline {
         //         sh 'ANSIBLE_ROLES_PATH="$PWD/ansible-script/roles" ansible-playbook -vvv ./ansible-script/playbook/web-server/web-server.yml -i ./ansible-script/host -u root -e "state=prepareation tagnumber=${BUILD_NUMBER}"'
         //     }
         // }
-
-		stage('build docker image') {
+        
+        stage('Build docker image') {
             steps {
                 script {
-                    docker.withregistry('', 'dockerhub') {
-                        def slackimage = docker.build("${env.image}:${build_number}")
-                        slackimage.push()
-                        slackimage.push('latest')
+                    docker.withRegistry('', 'dockerhub') {
+                        def slackImage = docker.build("${env.image}:${BUILD_NUMBER}")
+                        slackImage.push()
+                        slackImage.push('latest')
                     }
                 }
             }
@@ -67,4 +67,3 @@ pipeline {
         
     }
 }
-
