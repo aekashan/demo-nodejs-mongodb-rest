@@ -27,36 +27,18 @@ pipeline {
         //         sh 'ANSIBLE_ROLES_PATH="$PWD/ansible-script/roles" ansible-playbook -vvv ./ansible-script/playbook/web-server/web-server.yml -i ./ansible-script/host -u root -e "state=prepareation tagnumber=${BUILD_NUMBER}"'
         //     }
         // }
-       stage('Example'){
-       	steps{
-		echo 'hello world'
-	}
-       }
-       stage('Build') {
-            agent {
-                docker {
-                    image 'ekachansr/nodejs'
-                    // Run the container on the node specified at the
-                    // top-level of the Pipeline, in the same workspace,
-                    // rather than on a new node entirely:
-                    reuseNode true
+
+		stage('build docker image') {
+            steps {
+                script {
+                    docker.withregistry('', 'dockerhub') {
+                        def slackimage = docker.build("${env.image}:${build_number}")
+                        slackimage.push()
+                        slackimage.push('latest')
+                    }
                 }
             }
-            steps {
-                sh 'gradle --version'
-            }
-       }
-	//stage('Build docker image') {
-        //    steps {
-        //        script {
-        //            docker.withRegistry('', 'dockerhub') {
-        //                def slackImage = docker.build("${env.image}:${BUILD_NUMBER}")
-        //                slackImage.push()
-        //                slackImage.push('latest')
-        //            }
-        //        }
-        //    }
-        //}
+        }
 
         stage('Deployment'){
             steps {
